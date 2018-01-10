@@ -14,14 +14,18 @@
 int main() {
 	Client ordSender(IP_LOCALHOST, PORT_ORDER_CG);
 	while (!ordSender.Connect()) {
-		sleep(1);
+		sleep(3);
+		cout << "Waiting the Sort to Set Up ......\n";
 	}
+	cout << "ClientGateway's Order Connection Established.\n";
+
 	int symbol;
-	long price;
+	double price;
 	long qty;
 	while (true) {
+		cout << '\n';
 		for (int i = 0; i < SYMBOL_N; ++i) {
-			cout << SYMBOL[i] << ": " << i << " ";
+			cout << SYMBOL[i] << ": " << i << " , ";
 		}
 		cout << "\nChoose a symbol's stock to buy (in number): ";
 		cin >> symbol;
@@ -35,7 +39,7 @@ int main() {
 		// side: 1 (BUY)
 
 		string message;
-		message = codeOrderMessage(symbol, 1, price, qty);
+		message = codeOrderMessage(symbol, 1, long(price*100), qty);
 		ordSender.Send((void *)message.data(), message.length());
 	}
 }

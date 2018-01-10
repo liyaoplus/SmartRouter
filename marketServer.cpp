@@ -131,9 +131,10 @@ int main()
     ifstream infile;
     Client PriceSender(IP_LOCALHOST, PORT_MARKETDATA);
     while (!PriceSender.Connect()) {
-		sleep(1);
-        continue;
+		sleep(3);
+		cout << "Waiting the Sort to Set Up ......\n";
 	}
+	cout << "MarketServer Send Price Connection is Established.\n";
 
 	char current_path[BUFMAXSIZE];
 	int cnt = readlink("/proc/self/exe", current_path, BUFMAXSIZE);

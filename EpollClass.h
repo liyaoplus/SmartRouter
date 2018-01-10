@@ -74,7 +74,7 @@ public:
 			return false;
 		}
 		if (connect(sockfd,(struct sockaddr*)&servaddr,sizeof(servaddr)) == -1) {
-			perror("client connect error: ");
+			//perror("client connect error: ");
 			return false;
 		}
 		return true;

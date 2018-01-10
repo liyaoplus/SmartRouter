@@ -28,8 +28,9 @@ public:
 		ordReqSend.Init(IP_LOCALHOST, PORT_ORDER_REQ);
 		while (!ordReqSend.Connect()) {
 			sleep(3);
+			cout << "Waiting the MarketServer to Set Up ......\n";
 		}
-		cout << SYMBOL[symbol] << "'s Order Req Connection Established.\n";
+		cout << SYMBOL[symbol] << "'s \tOrder Req Connection Established.\n";
 	}
 	~SymbolThread() {}
 
@@ -42,7 +43,7 @@ public:
 					continue;
 				}
 				ord = mOQ.obj.Front();
-				cout << "Recv CG Order: BUY " 
+				cout << "\nRecv ClientGateway Order: BUY " 
 					 << ord.qty << ' ' << SYMBOL[ord.symbol] << '@' << ord.price/100.0 << '\n';
 				mOQ.obj.Pop();
 			}
@@ -87,11 +88,11 @@ private:
 			}
 			// Send trade message
 			string message;
-			message = codeSortMessage(tradeBuf[i].marketId, symbol, 1, buyPrice, tradeQty, 0);
+			message = codeSortMessage(tradeBuf[i].marketId, symbol, 1, tradeBuf[i].price, tradeQty, 0);
 			ordReqSend.Send((void *)message.data(), message.length());
 
-			cout << "Send Order Req: " 
-				 << tradeQty << ' ' << SYMBOL[symbol] << '@' << buyPrice 
+			cout << "Send Order Req: BUY " 
+				 << tradeQty << ' ' << SYMBOL[symbol] << '@' << tradeBuf[i].price/100.0 
 				 << " From " << MARKET[tradeBuf[i].marketId] << '\n';
 
 		}
@@ -103,7 +104,7 @@ private:
 		long leftQty = order.qty;
 		TradeBuf tradeBuf[MARKET_N];
 		
-		cout << "In Decision \n";
+		cout << "Order Decision: \n";
 
 		// Just one pass
 		int bufIdx = -1;

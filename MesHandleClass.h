@@ -64,7 +64,7 @@ public:
 			// process
 			cout << "Recv Order Req: " << SIDE[ord.side] << ' ' 
 				 << ord.qty << ord.symbol << '@'
-				 << ord.price << " From " << MARKET[ord.market] << '\n';
+				 << ord.price/100.0 << " From " << MARKET[ord.market] << '\n';
 		}
 	}
 private:
@@ -137,7 +137,7 @@ public:
 			{
 				lock_guard<mutex> lock(pmDL[symbol].mtx);
 				pmDL[symbol].obj.WriteMarketData(ord.market, ord.price, ord.qty);
-				cout << ord.market << '\t' << ord.price << '\t' << ord.qty << '\n';
+				//cout << ord.market << '\t' << ord.price << '\t' << ord.qty << '\n';
 				//pmDL[symbol].obj.PrintMarketData();
 			}
 		}

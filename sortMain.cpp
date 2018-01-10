@@ -18,7 +18,7 @@ void sortMarketDataListen(Mutexed<MarketDataList> *pmDL, int n) {
 	SortMesHandle mesHandle(pmDL, n);
 	Server sortMarketDataRecv(IP_LOCALHOST, PORT_MARKETDATA, &mesHandle);
 	while (!sortMarketDataRecv.Bind()) {
-		sleep(1);
+		sleep(3);
 	}
 	sortMarketDataRecv.Listen();
 }
@@ -37,52 +37,20 @@ void orderListenFunInThread(Mutexed<OrderQueue> *pmOQ, int n) {
 	sortOrderRecv.Listen();
 }
 
-/*void testClientFun(Mutexed<int> *pmId, Mutexed<long> *pmPrice) {
-	Mutexed<int> &mId = *pmId;
-	Mutexed<long> &mPrice = *pmPrice;
-	while (true) {
-		lock_guard<mutex> lock1_(mId.isNewMtx);
-		if (!mId.isNew) {
-			continue;
-		}
-		{
-			lock_guard<mutex> lock1(mId.mtx);
-			lock_guard<mutex> lock2(mPrice.mtx);
-			cout << "thread recv: " << mId.obj << '\t' << mPrice.obj << '\n';
-		}
-		mId.isNew = false;
-	}
-}
-void testSortFun(Mutexed<int> *pmId, Mutexed<long> *pmPrice) {
-	SortMesHandle mesHandle(pmId, pmPrice);
-	Server sortMarketDataRecv(IP_LOCALHOST, PORT_MARKETDATA, &mesHandle);
-	while (!sortMarketDataRecv.Bind()) {
-		sleep(1);
-	}
-	sortMarketDataRecv.Listen();
-}*/
 
 int main() {
-	const int symbolN = 1;
+	const int symbolN = SYMBOL_N;
 	Mutexed<MarketDataList> mDLA[symbolN];
 	Mutexed<OrderQueue> mOQA[symbolN];
 
 	thread taskAp(symbolFunInThread, &mDLA[0], &mOQA[0], 0);
-	taskAp.detach();
-
-	thread taskOrderListen(orderListenFunInThread, mOQA, symbolN);
-	taskOrderListen.detach();
-
-	sortMarketDataListen(mDLA, symbolN);
-
-	/*Mutexed<int> mId;
-	Mutexed<long> mPrice;
-	mId.isNew = false;
-	thread taskTest(testClientFun, &mId, &mPrice);
-	testSortFun(&mId, &mPrice);*/
-	//Init();
-
-	/*
+	thread taskFa(symbolFunInThread, &mDLA[1], &mOQA[1], 1);
+	thread taskTw(symbolFunInThread, &mDLA[2], &mOQA[2], 2);
+	thread taskAm(symbolFunInThread, &mDLA[3], &mOQA[3], 3);
+	thread taskMi(symbolFunInThread, &mDLA[4], &mOQA[4], 4);
+	thread taskGo(symbolFunInThread, &mDLA[5], &mOQA[5], 5);
+	thread taskYo(symbolFunInThread, &mDLA[6], &mOQA[6], 6);
+	thread taskYe(symbolFunInThread, &mDLA[7], &mOQA[7], 7);
     taskAp.detach();
     taskFa.detach();
     taskTw.detach();
@@ -91,12 +59,11 @@ int main() {
     taskGo.detach();
     taskYo.detach();
     taskYe.detach();
-	*/
 
-	//thread taskOrderListen(orderListenFunInThread, &orderQueue, &orderQueue_mtx);
-	//taskOrderListen.detach();
+	thread taskOrderListen(orderListenFunInThread, mOQA, symbolN);
+	taskOrderListen.detach();
 
-	//sortMarketDataListen(buyDataIsNewPA, bDIN_mtxPA, buyNewDataListPA, bNDL_mtxPA);
+	sortMarketDataListen(mDLA, symbolN);
 
 	return 0;
 }

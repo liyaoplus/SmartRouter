@@ -18,7 +18,7 @@ const int BUFMAXSIZE			= 16384; //8192;
 
 char IP_LOCALHOST[]				= "127.0.0.1";
 const int PORT_MARKETDATA		= 8000;
-const int PORT_ORDER_CG		= 8001; // order from clientGateway
+const int PORT_ORDER_CG			= 8001; // order from clientGateway
 const int PORT_ORDER_REQ		= 8002; // order request from sort
 const int PORT_ORDER_MES		= 8003; // order message from marketServer
 
